@@ -75,30 +75,27 @@ package com.finegamedesign.powerplant
             assertEquals(1, cardStack.value);
             assertEquals(true, cardStack.mc is Card1);
         }
-        
-        /* Setup cards.  Deal first two cards from deck of six. */
-        public function testDeal() {
-            var game:Game = new Game();
-            game.deck = [0, 1, 2, 3, 5];
-            var cardInHand0:InHand = new InHand();
-            var cardInHand1:InHand = new InHand();
-            var hand:Array = [cardInHand0, cardInHand1];
-            assertEquals(Card.NULL, cardInHand0.value);
-            assertEquals(null, cardInHand0.mc);
-            assertEquals(Card.NULL, cardInHand1.value);
-            assertEquals(null, cardInHand1.mc);
 
-            game.deal(hand);
-            assertEquals(0, cardInHand0.value);
-            assertTrue(cardInHand0.mc is Card0);
-            assertEquals(Card.NULL, cardInHand1.value);
-            assertEquals(null, cardInHand1.mc);
-
-            game.deal(hand);
-            assertEquals(0, cardInHand0.value);
-            assertTrue(cardInHand0.mc is Card0);
-            assertEquals(1, cardInHand1.value);
-            assertTrue(cardInHand1.mc is Card1);
+        /*
+           I HAVE NO CARDS IN PLAY.I MAKE 0 POWER.
+           I PLAY 4.I MAKE 4 POWER.
+           I PLAY 3 ON MY 4.4 x 3 = 12I MAKE 12 POWER.
+           I PLAY 2 ON MY 4 AND 3.4 x 3 x 2 = 24I MAKE 24 POWER.
+         */
+        public function testDescribePower():void
+        {
+            assertEquals(
+                "I HAVE NO CARDS IN PLAY.\n\nI MAKE 0 POWER.",
+                Stack.describePower([]));
+            assertEquals(
+                "I PLAY 4.\n\nI MAKE 4 POWER.",
+                Stack.describePower([4]));
+            assertEquals(
+                "I PLAY 3 ON MY 4.\n4 x 3 = 12\nI MAKE 12 POWER.",
+                Stack.describePower([4, 3]));
+            assertEquals(
+                "I PLAY 2 ON MY 4 AND 3.\n4 x 3 x 2 = 24\nI MAKE 24 POWER.",
+                Stack.describePower([4, 3, 2]));
         }
     }
 }

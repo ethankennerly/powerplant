@@ -7,6 +7,7 @@ package com.finegamedesign.powerplant
     public function Tests()
     {
         addTest(new TestStack());
+        addTest(new TestGame());
     }
   }
 }

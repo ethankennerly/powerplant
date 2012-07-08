@@ -15,9 +15,27 @@ package com.finegamedesign.powerplant
                 this.mouseEnabled = false;
                 this.mouseChildren = false;
             }
-/*            if (this.mc == null) {
-                super.select(mouseEvent);
+        }
+
+        /* Map values */
+        public static function values(cards:Array):Array
+        {
+            var cardValues:Array = new Array();
+            for (var i:int=0; i < cards.length; i++) {
+                cardValues.push(cards[i].value);
             }
-*/        }
+            return cardValues;
+        }
+
+        /** For example @see TestStack.as
+         */
+        public static function describePower(values:Array):String
+        {
+            var description:String = "";
+            for (var i:int=0; i < values.length; i++) {
+            }
+            return description;
+        }
+ 
     }
 }

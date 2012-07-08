@@ -105,10 +105,16 @@ package com.finegamedesign.powerplant
             if (null != stack) {
                 this.updatePowerOne(stack.value, PowerText);
             }
-            var theirStack:Array = Container.getChildren(this, TheirStack);
-            this.updatePower(theirStack, PowerTheirText);
+            var theirStacks:Array = Container.getChildren(this, TheirStack);
+            this.updatePower(theirStacks, PowerTheirText);
+            var theirDescription:PowerDescription = Container.getLowestClass(
+                this, [PowerDescription]);
+            if (null != theirDescription) {
+                theirDescription.txt.text = Stack.describePower(
+                    Stack.values(theirStacks));
+            }
         }
-        
+
         public var deck:Array;
         public var hand:Array;
         public var their_hand:Array;
