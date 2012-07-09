@@ -1,5 +1,6 @@
 package com.finegamedesign.powerplant 
 {
+    import flash.display.DisplayObjectContainer;
     import flash.display.MovieClip;
     import flash.events.Event;
 
@@ -9,7 +10,11 @@ package com.finegamedesign.powerplant
      */
     public class Game extends MovieClip
     {
-        
+        public var deck:Array;
+        public var hand:Array;
+        public var their_hand:Array;
+	public var update:Function = null;
+
         public function Game() 
         {
             this.addEventListener(Event.ADDED_TO_STAGE, this.start);
@@ -19,12 +24,8 @@ package com.finegamedesign.powerplant
             trace("Game.start:  You see the cover of Power Plant.");
             this.removeEventListener(Event.ADDED_TO_STAGE, this.start);
             this.stage.addEventListener(Event.ENTER_FRAME, this.enterFrame);
-            //- Skips dealing.
-            // trace("Game.start:  You see a hand of six cards to pick from.");
-            // this.gotoAndStop("picking");
-            // this.update = this["picking"];
         }
-        public var update:Function = null;
+
         public function enterFrame(event:Event = null) {
             if (null != this.update) {
                 this.update(event);
@@ -57,26 +58,13 @@ package com.finegamedesign.powerplant
             }
         }
         
-        /* Power text if there is a stack.  */
-        public function updatePowerOne(value:int, PowerTextClass:Class) {
-            var power:* = Container.getLowestClass(this, [PowerTextClass]);
-            if (null == power) {
-                trace("Game.updatePower:  Why is power " + power.toString() + "?");
-            }
-            if (Card.NULL != value) {
-                power._txt.text = value.toString();
-            }
-            else {
-                power._txt.text = "";
-            }
-        }
-        
         /* if there is a stack of cards, multiply card values and update power text.  */
-        public function updatePower(cards:Array, PowerTextClass:Class) {
-            var power:* = Container.getLowestClass(this, [PowerTextClass]);
-            power._txt.text = "";
+        public static function updatePower(container:DisplayObjectContainer,
+                cards:Array, PowerTextClass:Class):void
+        {
+            var power:* = Container.getLowestClass(container, [PowerTextClass]);
             if (null == power) {
-                trace("Game.updatePower:  Why is power " + power.toString() + "?");
+                trace("Game.updatePower:  Why is power " + power + "?");
             }
             else if (0 == cards.length) {
                 power._txt.text = "";
@@ -99,25 +87,28 @@ package com.finegamedesign.powerplant
         }
         
         /* Update text of their power and your power. 
-         * TODO:  Update power for two cards on their stack.  */
+         * Update power for two cards on their stack.  */
         public function powering(event:Event = null) {
-            var stack:Stack = Container.getLowestClass(this, [Stack]);
-            if (null != stack) {
-                this.updatePowerOne(stack.value, PowerText);
-            }
-            var theirStacks:Array = Container.getChildren(this, TheirStack);
-            this.updatePower(theirStacks, PowerTheirText);
-            var theirDescription:PowerDescription = Container.getLowestClass(
-                this, [PowerDescription]);
-            if (null != theirDescription) {
-                theirDescription.txt.text = Stack.describePower(
-                    Stack.values(theirStacks));
+            Game.describePowering(this, CardStack, PowerText, 
+                PowerDescription, "YOU", "YOUR");
+            Game.describePowering(this, TheirStack, PowerTheirText, 
+                TheirPowerDescription, "I", "MY");
+        }
+
+        public static function describePowering(container:DisplayObjectContainer, 
+            StackClass:Class, TextClass:Class, DescriptionClass:Class, 
+            pronoun:String, possessive:String):void
+        {
+            var stacks:Array = Container.getChildren(container, StackClass);
+            updatePower(container, stacks, TextClass);
+            var description:* = Container.getLowestClass(
+                container, [DescriptionClass]);
+            if (null != description && null != description.txt) {
+                description.txt.text = Stack.describePower(
+                    Stack.values(stacks), pronoun, possessive);
             }
         }
 
-        public var deck:Array;
-        public var hand:Array;
-        public var their_hand:Array;
         /* After hand appears. */
         public function reset():void {
             trace("Game.reset:  Now your cards will be dealt in the tutorial's starting order.");
@@ -233,31 +224,9 @@ package com.finegamedesign.powerplant
         /* We keep our hand and score.  We discard the rest. 
          * Discard stacks and city contract.  */
         public function clear() {
-/*            var stack:Stack = Container.getLowestClass(this, Stack);
-            if (null == stack) {
-                trace("Game.clear:  Why is stack null?");
-            } else {
-                stack.swapImage(Card.NULL);
-            }
-*/
-/*            var children:Array = Container.getChildren(this, TheirStack);
-            if (0 == children.length) {
-                trace("Game.clear:  Why is their stack null?");
-            } else {
-                for (var c:int = 0; c < children.length; c ++) {
-                    var card:TheirStack = children[c];
-                    if (Card.NULL != card.value) {
-                        card.swapImage(Card.NULL);
-                    }
-                }
-            }
-*/            this.clearChildren(Stack);
+            this.clearChildren(Stack);
             this.clearChildren(TheirStack);
             this.clearChildren(Contract);
         }
     }
 }
-
-
-
-

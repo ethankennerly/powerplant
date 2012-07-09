@@ -96,6 +96,17 @@ package com.finegamedesign.powerplant
             assertEquals(
                 "I PLAY 2 ON MY 4 AND 3.\n4 x 3 x 2 = 24\nI MAKE 24 POWER.",
                 Stack.describePower([4, 3, 2]));
+            assertEquals(
+                "YOU PLAY 2 ON YOUR 4 AND 3.\n4 x 3 x 2 = 24\nYOU MAKE 24 POWER.",
+                Stack.describePower([4, 3, 2], "YOU", "YOUR"));
+        }
+
+        public function testValues():void
+        {
+            assertEqualsArrays( [2, 3],
+                Stack.values( [new Card(2), new Card(3)] ));
+            var nulls:Array = [new Card(Card.NULL), new Card(Card.NULL)];
+            assertEqualsArrays( [], Stack.values(nulls));
         }
     }
 }

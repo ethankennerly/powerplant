@@ -4,9 +4,6 @@ package com.finegamedesign.powerplant
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.display.Sprite;
-    import asunit.framework.Assert;
-    import com.finegamedesign.NextFrameButton;
-    import com.finegamedesign.PrevFrameButton;
 
     /**
      * ...

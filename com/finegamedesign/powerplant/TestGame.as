@@ -34,5 +34,16 @@ package com.finegamedesign.powerplant
             assertTrue(cardInHand1.mc is Card1);
         }
 
+        /* No stack.  Describe power.  */
+        public function testDescribePowering():void
+        {
+            var game:Game = new Game();
+            assertEqualsArrays([], Container.getChildren(game, Stack));
+            assertEqualsArrays([], Container.getChildren(game, Description));
+            var description:Description = new Description();
+            game.addChild(description);
+            Game.describePowering(game, Stack, PowerText, Description, "YOU", "YOUR");
+            assertEquals("YOU HAVE NO CARDS IN PLAY.\r\rYOU MAKE 0 POWER.", description.txt.text);
+        }
     }
 }
