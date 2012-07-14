@@ -156,7 +156,7 @@ package com.finegamedesign.powerplant
             }
             return found;
         }
-        
+       
         /* At least one frame beforehand, TheirStack must exist.  
          * Move card from their hand to their stack */
         public function their_play(value:int) {
@@ -171,7 +171,6 @@ package com.finegamedesign.powerplant
                 trace("Game.their_play:  Do they have this card? " + value.toString());
                 return;
             }
-            // var stack:TheirStack = Container.getLowestClass(this, TheirStack);
             var stack:TheirStack = this.findLowest(TheirStack, Card.NULL);
             if (null == stack) {
                 trace("Game.their_play:  At least one frame beforehand, TheirStack must exist.");                
