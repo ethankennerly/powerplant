@@ -13,6 +13,14 @@ package com.finegamedesign.powerplant
         public static function values(parent:DisplayObjectContainer, ContainerClass:Class):Array
         {
             var stackValues:Array = [];
+            var cards:Array = Container.getChildren(parent, Card);
+            for each (var card:Card in cards) {
+                stackValues.push(card.value);
+            }
+            var children:Array = Container.getChildren(parent, ContainerClass);
+            for each (var child:* in children) {
+                stackValues.push( values(child, ContainerClass) );
+            }
             return stackValues;
         }
     }

@@ -26,9 +26,9 @@ package com.finegamedesign.powerplant
 
         /* All children of the given class. */
         public static function getChildren(container : DisplayObjectContainer, aClass : Class) : * {
-            var children : Array = new Array();
-            for (var c : int = 0; c < container.numChildren; c++ ) {
-                var child : DisplayObject = container.getChildAt(c);
+            var children:Array = new Array();
+            for (var c:int = 0; c < container.numChildren; c++ ) {
+                var child:DisplayObject = container.getChildAt(c);
                 if (child is aClass) {
                     children.push(child);
                 }
