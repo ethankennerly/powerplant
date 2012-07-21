@@ -1,5 +1,6 @@
 package com.finegamedesign.powerplant
 {
+    import flash.display.Sprite;
     import flash.events.MouseEvent;
 
     import asunit.framework.TestCase;

@@ -13,7 +13,7 @@ package com.finegamedesign.powerplant
         public var deck:Array;
         public var hand:Array;
         public var their_hand:Array;
-	public var update:Function = null;
+        public var update:Function = null;
 
         public function Game() 
         {

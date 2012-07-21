@@ -1,5 +1,6 @@
 package com.finegamedesign.powerplant 
 {
+    import flash.display.DisplayObjectContainer;
     import flash.events.MouseEvent;
 
     /**
@@ -7,6 +8,10 @@ package com.finegamedesign.powerplant
      */
     public class Stack extends Spot
     {
+        public function Stack(cardValue:int = Card.NULL) {
+            super(cardValue);
+        }
+
         /* only put a card on a stack.  do not select to take off. */
         override public function select(mouseEvent:MouseEvent):void {
             super.select(mouseEvent);
