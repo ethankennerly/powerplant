@@ -120,9 +120,14 @@ package com.finegamedesign.powerplant
             }
         }
 
-        /* At least one frame beforehand, TheirStack must exist.  
-         * Move card from their hand to their stack */
-        public function playCard(StackContainerClass:Class, value:int) {
+        /**
+         * At least one frame beforehand, TheirStackContainer must exist.  
+         * Move card from their hand to stack in container of their stack container. 
+         *      FieldStackContainer
+         *          StackContainer
+         *              Stack (ed Card)
+         */
+        public function playCard(FieldStackContainerClass:Class, value:int, stackIndex:int=0) {
             var found:InTheirHand = null;
             for (var c:int = 0; c < this.theirHand.length; c ++) {
                 var card:InTheirHand = this.theirHand[c];
@@ -134,19 +139,16 @@ package com.finegamedesign.powerplant
                 trace("Game.playCard:  Do they have this card? " + value.toString());
                 return;
             }
-            var stack:Stack = StackContainer.findLowest(this, StackContainerClass, Stack, Card.NULL);
-            if (null == stack) {
-                trace("Game.playCard:  At least one frame beforehand, TheirStackContainer must exist.");                
+            var empty:Stack = StackContainer.findLowest(this, FieldStackContainerClass, 
+                Card.NULL, stackIndex);
+            if (null == empty) {
+                trace("Game.playCard:  At least one frame beforehand, FieldStackContainer must exist.");                
                 return;
             }
-            if (Card.NULL != stack.value) {
-                trace("Game.playCard:  When I play " + found.value 
-                    + ", why is stack " + stack.value.toString() + " not empty?");
-            }
-            found.swap(stack);
+            found.swap(empty);
             var next:Stack = new Stack();
-            StackContainer.offset(stack, next);
-            stack.parent.addChild(next);
+            StackContainer.offset(empty, next);
+            empty.parent.addChild(next);
         }
 
         /* At least one frame beforehand, Contract must exist.  

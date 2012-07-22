@@ -50,19 +50,21 @@ package com.finegamedesign.powerplant
          * Play from a hand of [1] to an empty stack. 
          * Expect 1 in stack container, placeholder for next card, and hand is empty.
          */
-        public function testTheirPlay():void
+        public function testPlayCard():void
         {
             var game:Game = new Game();
             var stack:StackContainer = new StackContainer();
             stack.addChild(new Stack());
-            game.addChild(stack);
+            var field:StackContainer = new StackContainer();
+            field.addChild(stack);
+            game.addChild(field);
             game.theirHand = [new InTheirHand()];
             game.theirHand[0].value = 1;
             game.playCard(StackContainer, 1);
+            assertEquals(Card.NULL, game.theirHand[0].value);
             assertEquals(2, stack.numChildren);
             assertEquals(1, (stack.getChildAt(0) as Stack).value);
             assertEquals(Card.NULL, (stack.getChildAt(1) as Stack).value);
-            assertEquals(Card.NULL, game.theirHand[0].value);
         }
     }
 }

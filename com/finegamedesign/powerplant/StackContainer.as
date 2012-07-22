@@ -32,19 +32,21 @@ package com.finegamedesign.powerplant
             return stackValues;
         }
 
-        /* The card in stack container whose value equals the given value. */
+        /**
+         * The card in stack container whose value equals the given value. 
+         * Compiler complains about default constant Card.NULL, so pass in "value".
+         */
         public static function findLowest(container:DisplayObjectContainer, 
-                StackContainerClass:Class, CardClass:Class, value:int):* {
-            var found:*;
-            var children:Array = Container.getChildren(container, StackContainerClass);
-            for each (var child:* in children) {
-                var grandchildren:Array = Container.getChildren(child, CardClass);
-                for each (var grandchild:* in grandchildren) {
-                    var card:* = grandchild as CardClass;
-                    if (value == card.value) {
-                        found = card;
-                        break;
-                    }
+                FieldStackContainerClass:Class, value:int, stackIndex:int=0):Stack 
+        {
+            var found:Stack;
+            var field:* = Container.getLowestClass(container, [FieldStackContainerClass]);
+            var stacks:Array = Container.getChildren(field, StackContainer);
+            var cards:Array = Container.getChildren(stacks[stackIndex], Stack);
+            for each (var card:Stack in cards) {
+                if (value == card.value) {
+                    found = card;
+                    break;
                 }
             }
             return found;

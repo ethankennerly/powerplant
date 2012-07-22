@@ -11,7 +11,7 @@ package com.finegamedesign.powerplant
          * stacks with cards []
          * stacks with cards [[]]
          * stacks with cards [[], [2, 3], [1]]
-         * 5 outside a container and stacks [[], [2, 3], [1]]
+         * NULL and 5 outside a container and stacks [[], [2, 3], [1]]
          */
         public function testValues():void
         {
@@ -37,8 +37,10 @@ package com.finegamedesign.powerplant
             sprite.addChild(new Stack());
             sprite.addChild(new Stack(5));
             var values:Array = StackContainer.values(sprite, StackContainer);
-            assertEqualsArrays([], values[0]);
-            assertEquals(5, values[1]);
+            assertEquals(5, values[0]);
+            assertEqualsArrays([], values[1][0]);
+            assertEqualsArrays([2, 3], values[1][1]);
+            assertEqualsArrays([1], values[1][2]);
         }
 
         /**
@@ -49,21 +51,29 @@ package com.finegamedesign.powerplant
         public function testFindLowest():void
         {
             var field:StackContainer = new StackContainer();
+            var table:Sprite = new Sprite();
+            table.addChild(field);
             assertEquals("No child", null, 
-                StackContainer.findLowest(field, StackContainer, Card, Card.NULL));
-            field.addChild(new StackContainer());
+                StackContainer.findLowest(table, StackContainer, Card.NULL));
+            var stack0:StackContainer = new StackContainer();
+            field.addChild(stack0);
             assertEquals("Empty stack", null, 
-                StackContainer.findLowest(field, StackContainer, Card, Card.NULL));
-            var stack:StackContainer = new StackContainer();
-            stack.addChild(new Stack(2));
-            stack.addChild(new Stack(3));
-            field.addChild(stack);
+                StackContainer.findLowest(table, StackContainer, Card.NULL));
+            var stack1:StackContainer = new StackContainer();
+            stack1.addChild(new Stack(2));
+            stack1.addChild(new Stack(3));
+            field.addChild(stack1);
             var stack2:StackContainer = new StackContainer();
             var cardNull:Stack = new Stack();
             stack2.addChild(cardNull);
             field.addChild(stack2);
-            assertEquals("Two stacks", cardNull, 
-                StackContainer.findLowest(field, StackContainer, Card, Card.NULL));
+            assertEquals("Empty card value", Card.NULL, cardNull.value); 
+            assertEquals("First stack", null, 
+                StackContainer.findLowest(table, StackContainer, Card.NULL));
+            assertEquals("Second stack", null, 
+                StackContainer.findLowest(table, StackContainer, Card.NULL, 1));
+            assertEquals("Third stack", cardNull, 
+                StackContainer.findLowest(table, StackContainer, Card.NULL, 2));
         }
     }
 }
