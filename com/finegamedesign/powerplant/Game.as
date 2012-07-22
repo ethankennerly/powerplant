@@ -62,27 +62,29 @@ package com.finegamedesign.powerplant
         /* Update text of their power and your power. 
          * Update power for two cards on their stack.  */
         public function powering(event:Event = null) {
-            Game.describePowering(this, YourStackContainer, PowerText, 
+            Game.describePowering(this, YourField, PowerText, 
                 PowerDescription, "YOU", "YOUR");
-            Game.describePowering(this, TheirStackContainer, PowerTheirText, 
+            Game.describePowering(this, TheirField, PowerTheirText, 
                 TheirPowerDescription, "I", "MY");
         }
 
-        public static function describePowering(container:DisplayObjectContainer, 
-            StackContainerClass:Class, PowerTextClass:Class, DescriptionClass:Class, 
+        /**
+         * Text of total power, description of card played on one stack.
+         */ 
+        public static function describePowering(table:DisplayObjectContainer, 
+            FieldStackContainerClass:Class, PowerTextClass:Class, DescriptionClass:Class, 
             pronoun:String, possessive:String):void
         {
-            var parent:* = Container.getLowestClass(container, [StackContainerClass]);
-            var values:Array = [StackContainer.values(parent, StackContainerClass)];
-            var powerText:* = Container.getLowestClass(container, [PowerTextClass]);
+            var field:* = Container.getLowestClass(table, [FieldStackContainerClass]);
+            var stackValues:Array = StackContainer.values(field);
+            var powerText:* = Container.getLowestClass(table, [PowerTextClass]);
             if (null != powerText) {
-                powerText._txt.text = Calculate.power(values).toString();
+                powerText._txt.text = Calculate.power([stackValues]).toString();
             }
-            var description:* = Container.getLowestClass(
-                container, [DescriptionClass]);
+            var description:* = Container.getLowestClass(table, [DescriptionClass]);
             if (null != description && null != description.txt) {
                 description.txt.text = Stack.describePower(
-                    values, pronoun, possessive);
+                    stackValues, pronoun, possessive);
             }
         }
 
@@ -146,7 +148,7 @@ package com.finegamedesign.powerplant
                 return;
             }
             found.swap(empty);
-            var next:Stack = new Stack();
+            var next:CardStack = new CardStack();
             StackContainer.offset(empty, next);
             empty.parent.addChild(next);
         }

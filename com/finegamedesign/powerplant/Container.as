@@ -25,7 +25,8 @@ package com.finegamedesign.powerplant
         }
 
         /* All children of the given class. */
-        public static function getChildren(container : DisplayObjectContainer, aClass : Class) : * {
+        public static function getChildren(container:DisplayObjectContainer, aClass:Class):*
+        {
             var children:Array = new Array();
             if (null != container) {
                 for (var c:int = 0; c < container.numChildren; c++ ) {
@@ -37,6 +38,5 @@ package com.finegamedesign.powerplant
             }
             return children;
         }
-
     }
 }

@@ -11,14 +11,13 @@ package com.finegamedesign.powerplant
          * stacks with cards []
          * stacks with cards [[]]
          * stacks with cards [[], [2, 3], [1]]
-         * NULL and 5 outside a container and stacks [[], [2, 3], [1]]
          */
         public function testValues():void
         {
             var field:StackContainer = new StackContainer();
-            assertEqualsArrays("No child", [], StackContainer.values(field, StackContainer));
+            assertEqualsArrays("No child", [], StackContainer.values(field));
             field.addChild(new StackContainer());
-            assertEqualsArrays("Empty stack", [], StackContainer.values(field, StackContainer)[0]);
+            assertEqualsArrays("Empty stack", [], StackContainer.values(field)[0]);
             var stack:StackContainer = new StackContainer();
             stack.addChild(new Stack(2));
             stack.addChild(new Stack(3));
@@ -26,21 +25,11 @@ package com.finegamedesign.powerplant
             var stack2:StackContainer = new StackContainer();
             stack2.addChild(new Stack(1));
             field.addChild(stack2);
-            var values:Array = StackContainer.values(field, StackContainer);
+            var values:Array = StackContainer.values(field);
             assertEqualsArrays([], values[0]);
             assertEqualsArrays([2, 3], values[1]);
             assertEqualsArrays([1], values[2]);
             assertEquals(3, values.length);
-
-            var sprite:Sprite = new Sprite();
-            sprite.addChild(field);
-            sprite.addChild(new Stack());
-            sprite.addChild(new Stack(5));
-            var values:Array = StackContainer.values(sprite, StackContainer);
-            assertEquals(5, values[0]);
-            assertEqualsArrays([], values[1][0]);
-            assertEqualsArrays([2, 3], values[1][1]);
-            assertEqualsArrays([1], values[1][2]);
         }
 
         /**

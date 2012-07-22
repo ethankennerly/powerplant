@@ -38,18 +38,25 @@ package com.finegamedesign.powerplant
 
         /** For example @see TestStack.as
          */
-        public static function describePower(powers:Array, pronoun:String="I", possessive:String="MY"):String
+        public static function describePower(stackPowers:Array, 
+                pronoun:String="I", possessive:String="MY", stackIndex:int=0):String
         {
+            var product:int = Calculate.power(stackPowers);
             var description:String;
             var arithmetic:String = "";
-            var product:int;
-            if (0 == powers.length) {
+            var powers:Array;
+            var cardCount:int = 0;
+            for (var s:int; s < stackPowers.length; s++) {
+                cardCount += stackPowers[s].length;
+                if (stackIndex == s) {
+                    powers = stackPowers[s];
+                }
+            }
+            if (0 == cardCount || null == powers || 0 == powers.length) {
                 description = pronoun + " HAVE NO CARDS IN PLAY";
-                product = 0;
             }
             else {
                 description = pronoun + " PLAY " + powers[powers.length - 1].toString();
-                product = powers[0];
                 if (2 <= powers.length) {
                     description += " ON " + possessive;
                     arithmetic = powers[0].toString();
@@ -59,7 +66,6 @@ package com.finegamedesign.powerplant
                             description += " AND";
                         }
                         arithmetic += " x " + powers[i].toString();
-                        product *= powers[i];
                     }
                     arithmetic += " = " + product.toString();
                 }

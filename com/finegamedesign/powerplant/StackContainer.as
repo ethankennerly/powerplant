@@ -13,21 +13,21 @@ package com.finegamedesign.powerplant
         }
 
         /**
-         * Array of card values within a stack container.  May be recursive.
+         * Array of card values within a field.  May be recursive.
          * For example @see TestStackContainer.as
          */
-        public static function values(parent:DisplayObjectContainer, ContainerClass:Class):Array
+        public static function values(field:StackContainer):Array
         {
             var stackValues:Array = [];
-            var cards:Array = Container.getChildren(parent, Card);
+            var cards:Array = Container.getChildren(field, Card);
             for each (var card:Card in cards) {
                 if (Card.NULL != card.value) {
                     stackValues.push(card.value);
                 }
             }
-            var children:Array = Container.getChildren(parent, ContainerClass);
-            for each (var child:* in children) {
-                stackValues.push( values(child, ContainerClass) );
+            var children:Array = Container.getChildren(field, StackContainer);
+            for each (var child:StackContainer in children) {
+                stackValues.push( values(child) );
             }
             return stackValues;
         }
