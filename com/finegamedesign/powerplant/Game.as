@@ -1,5 +1,6 @@
 package com.finegamedesign.powerplant 
 {
+    import flash.display.DisplayObject;
     import flash.display.DisplayObjectContainer;
     import flash.display.MovieClip;
     import flash.events.Event;
@@ -12,8 +13,8 @@ package com.finegamedesign.powerplant
     {
         public var deck:Array;
         public var hand:Array;
-        public var their_hand:Array;
-        public var update:Function = null;
+        public var theirHand:Array;
+        public var update:Function;
 
         public function Game() 
         {
@@ -58,54 +59,30 @@ package com.finegamedesign.powerplant
             }
         }
         
-        /* if there is a stack of cards, multiply card values and update power text.  */
-        public static function updatePower(container:DisplayObjectContainer,
-                cards:Array, PowerTextClass:Class):void
-        {
-            var power:* = Container.getLowestClass(container, [PowerTextClass]);
-            if (null == power) {
-                trace("Game.updatePower:  Why is power " + power + "?");
-            }
-            else if (0 == cards.length) {
-                power._txt.text = "";
-            } else {
-                var totalPower:int = 0;
-                var previousValue:Boolean = false;
-                for (var i:int = 0; i < cards.length; i++) 
-                {
-                    var card:Card = cards[i];
-                    if (Card.NULL != card.value) {
-                        if (! previousValue) {
-                            totalPower = 1;
-                            previousValue = true;
-                        }
-                        totalPower *= card.value;
-                    }
-                }
-                power._txt.text = totalPower.toString();
-            }
-        }
-        
         /* Update text of their power and your power. 
          * Update power for two cards on their stack.  */
         public function powering(event:Event = null) {
-            Game.describePowering(this, CardStack, PowerText, 
+            Game.describePowering(this, YourStackContainer, PowerText, 
                 PowerDescription, "YOU", "YOUR");
-            Game.describePowering(this, TheirStack, PowerTheirText, 
+            Game.describePowering(this, TheirStackContainer, PowerTheirText, 
                 TheirPowerDescription, "I", "MY");
         }
 
         public static function describePowering(container:DisplayObjectContainer, 
-            StackClass:Class, TextClass:Class, DescriptionClass:Class, 
+            StackContainerClass:Class, PowerTextClass:Class, DescriptionClass:Class, 
             pronoun:String, possessive:String):void
         {
-            var stacks:Array = Container.getChildren(container, StackClass);
-            updatePower(container, stacks, TextClass);
+            var parent:* = Container.getLowestClass(container, [StackContainerClass]);
+            var values:Array = [StackContainer.values(parent, StackContainerClass)];
+            var powerText:* = Container.getLowestClass(container, [PowerTextClass]);
+            if (null != powerText) {
+                powerText._txt.text = Calculate.power(values).toString();
+            }
             var description:* = Container.getLowestClass(
                 container, [DescriptionClass]);
             if (null != description && null != description.txt) {
                 description.txt.text = Stack.describePower(
-                    Stack.values(stacks), pronoun, possessive);
+                    values, pronoun, possessive);
             }
         }
 
@@ -114,7 +91,7 @@ package com.finegamedesign.powerplant
             trace("Game.reset:  Now your cards will be dealt in the tutorial's starting order.");
             this.deck = new Array(1, 3, 2, 4, 3, 5, 5, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2);
             this.hand = Container.getChildren(this, InHand);
-            this.their_hand = Container.getChildren(this, InTheirHand);
+            this.theirHand = Container.getChildren(this, InTheirHand);
         }
         
         /* Deal one card to your hand. */
@@ -128,13 +105,13 @@ package com.finegamedesign.powerplant
                     if (this.hand == hand) {
                         trace("Game.deal:  You receive card number " + dealt);
                     }
-                    else if (this.their_hand == hand) {
+                    else if (this.theirHand == hand) {
                         trace("Game.deal:  They receive card number " + dealt);                    
                     }
                     else {
                         trace("Game.deal:  WHO receives card number " + dealt + "?");                                            
                     }
-                    card.swapImage(dealt);
+                    card.value = dealt;
                     break;
                 }
             }
@@ -143,44 +120,33 @@ package com.finegamedesign.powerplant
             }
         }
 
-        /* The card whose value equals the given value. */
-        public function findLowest(CardClass:Class, value:int):* {
-            var children:Array = Container.getChildren(this, CardClass);
-            var found:* = null;
-            for (var c:int = 0; c < children.length; c ++) {
-                var card = children[c] as CardClass;
-                if (value == card.value) {
-                    found = card;
-                    break;
-                }
-            }
-            return found;
-        }
-       
         /* At least one frame beforehand, TheirStack must exist.  
          * Move card from their hand to their stack */
-        public function their_play(value:int) {
+        public function playCard(StackContainerClass:Class, value:int) {
             var found:InTheirHand = null;
-            for (var c:int = 0; c < this.their_hand.length; c ++) {
-                var card:InTheirHand = this.their_hand[c];
+            for (var c:int = 0; c < this.theirHand.length; c ++) {
+                var card:InTheirHand = this.theirHand[c];
                 if (value == card.value) {
                     found = card;
                 }
             }
             if (null == found) {
-                trace("Game.their_play:  Do they have this card? " + value.toString());
+                trace("Game.playCard:  Do they have this card? " + value.toString());
                 return;
             }
-            var stack:TheirStack = this.findLowest(TheirStack, Card.NULL);
+            var stack:Stack = StackContainer.findLowest(this, StackContainerClass, Stack, Card.NULL);
             if (null == stack) {
-                trace("Game.their_play:  At least one frame beforehand, TheirStack must exist.");                
+                trace("Game.playCard:  At least one frame beforehand, TheirStackContainer must exist.");                
                 return;
             }
             if (Card.NULL != stack.value) {
-                trace("Game.their_play:  When I play " + found.value 
+                trace("Game.playCard:  When I play " + found.value 
                     + ", why is stack " + stack.value.toString() + " not empty?");
             }
-            found.swap(stack);            
+            found.swap(stack);
+            var next:Stack = new Stack();
+            StackContainer.offset(stack, next);
+            stack.parent.addChild(next);
         }
 
         /* At least one frame beforehand, Contract must exist.  

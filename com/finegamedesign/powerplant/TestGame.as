@@ -38,12 +38,31 @@ package com.finegamedesign.powerplant
         public function testDescribePowering():void
         {
             var game:Game = new Game();
-            assertEqualsArrays([], Container.getChildren(game, Stack));
+            assertEqualsArrays([], Container.getChildren(game, StackContainer));
             assertEqualsArrays([], Container.getChildren(game, Description));
             var description:Description = new Description();
             game.addChild(description);
-            Game.describePowering(game, Stack, PowerText, Description, "YOU", "YOUR");
+            Game.describePowering(game, StackContainer, PowerText, Description, "YOU", "YOUR");
             assertEquals("YOU HAVE NO CARDS IN PLAY.\r\rYOU MAKE 0 POWER.", description.txt.text);
+        }
+
+        /** 
+         * Play from a hand of [1] to an empty stack. 
+         * Expect 1 in stack container, placeholder for next card, and hand is empty.
+         */
+        public function testTheirPlay():void
+        {
+            var game:Game = new Game();
+            var stack:StackContainer = new StackContainer();
+            stack.addChild(new Stack());
+            game.addChild(stack);
+            game.theirHand = [new InTheirHand()];
+            game.theirHand[0].value = 1;
+            game.playCard(StackContainer, 1);
+            assertEquals(2, stack.numChildren);
+            assertEquals(1, (stack.getChildAt(0) as Stack).value);
+            assertEquals(Card.NULL, (stack.getChildAt(1) as Stack).value);
+            assertEquals(Card.NULL, game.theirHand[0].value);
         }
     }
 }
