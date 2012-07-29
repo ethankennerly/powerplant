@@ -12,10 +12,21 @@ package com.finegamedesign.powerplant
             super(cardValue);
         }
 
+        override public function gotoMouseEvent(mouseEvent:MouseEvent):void {
+            if (Card.NULL == this.value) {
+                super.gotoMouseEvent(mouseEvent);
+            } else {
+                this.gotoAndPlay(MouseEvent.MOUSE_OUT);
+                this.mouseEnabled = false;
+                this.mouseChildren = false;
+            }
+        }
+        
         /* only put a card on a stack.  do not select to take off. */
         override public function select(mouseEvent:MouseEvent):void {
-            super.select(mouseEvent);
-            if (Card.NULL != this.value) {
+            if (Card.NULL == this.value) {
+                super.select(mouseEvent);
+            } else {
                 this.gotoAndPlay(MouseEvent.MOUSE_OUT);
                 this.mouseEnabled = false;
                 this.mouseChildren = false;

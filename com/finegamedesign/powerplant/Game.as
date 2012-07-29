@@ -6,18 +6,17 @@ package com.finegamedesign.powerplant
     import flash.events.Event;
 
     /**
-     * ...
+     * Controller
      * @author Ethan Kennerly
      */
     public class Game extends MovieClip
     {
-        public var deck:Array;
-        public var hand:Array;
-        public var theirHand:Array;
+        public var rule:Rule;
         public var update:Function;
 
         public function Game() 
         {
+            rule = new Rule();
             this.addEventListener(Event.ADDED_TO_STAGE, this.start);
         }
         
@@ -36,26 +35,22 @@ package com.finegamedesign.powerplant
         /* pick a card.  card selected:  holding. */
         public function picking(event:Event = null) {
             var selected:Selected = Container.getLowestClass(this, [Selected]);
-            if (null == selected) {
-                trace("Game.picking:  Why is selected " + selected.toString() + "?");
-            }
-            else if (Card.NULL != selected.value) {
+            if (null != selected && Card.NULL != selected.value) {
                 trace("Game.picking:  You see a card by your cursor.");
-                this.update = this["holding"];
-                this.gotoAndStop("holding");
+                nextFrame();
+                //this.update = this["holding"];
+                //this.gotoAndStop("call_holdingExample");
             }
         }
         
         /* cursor is empty and card played to stack:  powering. */
         public function holding(event:Event = null) {
             var selected:Selected = Container.getLowestClass(this, [Selected]);
-            if (null == selected) {
-                trace("Game.holding:  Why is selected " + selected.toString() + "?");
-            }
-            else if (Card.NULL == selected.value) {
+            if (null != selected && Card.NULL == selected.value) {
                 trace("Game.holding:  Card on stack.  You make power.  You may not select a card.");
-                this.update = this["powering"];
-                this.gotoAndStop("powering");
+                nextFrame();
+                //this.update = this["powering"];
+                //this.gotoAndStop("call_poweringExample");
             }
         }
         
@@ -89,36 +84,48 @@ package com.finegamedesign.powerplant
         }
 
         /* After hand appears. */
-        public function reset():void {
-            trace("Game.reset:  Now your cards will be dealt in the tutorial's starting order.");
-            this.deck = new Array(1, 3, 2, 4, 3, 5, 5, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2);
-            this.hand = Container.getChildren(this, InHand);
-            this.theirHand = Container.getChildren(this, InTheirHand);
-        }
-        
-        /* Deal one card to your hand. */
-        public function deal(hand:Array):void 
+        public function reset():void 
         {
-            var dealt:int = Card.NULL;
-            for (var c:int = 0; c < hand.length; c++ ) {
-                var card:Card = hand[c];
+            trace("Game.reset:  Now your cards will be dealt in the tutorial's starting order.");
+            rule.reset();
+            resetHand(InHand);
+            resetHand(InTheirHand);
+        }
+
+        /** Cards in hand become empty. */
+        public function resetHand(HandClass:Class):void
+        {
+            var cards:Array = Container.getChildren(this, HandClass);
+            for each (var card:Card in cards) {
+                card.value = Card.NULL;
+            }
+        }
+       
+        /** Integers in children of this class. */        
+        public function evaluateHand(HandClass:Class):Array
+        {
+            var cards:Array = Container.getChildren(this, HandClass);
+            var values:Array = new Array();
+            for each (var card:Card in cards) {
+                values.push(card);
+            }
+            return values;
+        }
+
+        /* Deal one card to your hand. */
+        public function deal(hand:Array, HandClass:Class):void 
+        {
+            var dealt:int = rule.deal(hand);
+            var cards:Array = Container.getChildren(this, HandClass);
+            for (var c:int = 0; c < cards.length; c++ ) {
+                var card:Card = cards[c];
                 if (Card.NULL == card.value) {
-                    dealt = this.deck.shift();
-                    if (this.hand == hand) {
-                        trace("Game.deal:  You receive card number " + dealt);
-                    }
-                    else if (this.theirHand == hand) {
-                        trace("Game.deal:  They receive card number " + dealt);                    
-                    }
-                    else {
-                        trace("Game.deal:  WHO receives card number " + dealt + "?");                                            
-                    }
                     card.value = dealt;
                     break;
                 }
             }
             if (Card.NULL == dealt) {
-                trace("Game.deal:  Why was no card dealt?  Was your hand full?");
+                throw new Error("Game.deal:  Why no card?  Hand full?  Deck empty?");
             }
         }
 
@@ -129,10 +136,13 @@ package com.finegamedesign.powerplant
          *          StackContainer
          *              Stack (ed Card)
          */
-        public function playCard(FieldStackContainerClass:Class, value:int, stackIndex:int=0) {
+        public function playCard(FieldStackContainerClass:Class, value:int, stackIndex:int=0):void
+        {
+            rule.theirHand.splice(rule.theirHand.indexOf(value), 1);
             var found:InTheirHand = null;
-            for (var c:int = 0; c < this.theirHand.length; c ++) {
-                var card:InTheirHand = this.theirHand[c];
+            var theirHand:Array = Container.getChildren(this, InTheirHand);
+            for (var c:int = 0; c < theirHand.length; c ++) {
+                var card:InTheirHand = theirHand[c];
                 if (value == card.value) {
                     found = card;
                 }
@@ -156,23 +166,25 @@ package com.finegamedesign.powerplant
         /* At least one frame beforehand, Contract must exist.  
          * Move card from deck to contract.  
          * DOES NOT yet check if deck has one or fewer cards.  */
-        public function revealContract() {
+        public function revealContract():void {
+            viewContract(rule.revealContract());
+        }
+
+        public function viewContract(values:Array):void {
+            if (2 != values.length) {
+                throw new Error("Game.viewContract:  Why are there not two values?  There are " + values.length.toString());
+            }
             var children:Array = Container.getChildren(this, Contract);
             if (2 != children.length) {
-                trace("Game.revealContract:  Why are there not two contract cards?  There are " + children.length.toString());
+                throw new Error("Game.viewContract:  Why are there not two contract cards?  There are " + children.length.toString());
             }
-            var tensValue:int = this.deck.shift();
-            var tens:Contract = children[0];
-            if (Card.NULL != tens.value) {
-                trace("Game.revealContract:  Why is tens place not null?  It is " + tens.value.toString());
+            for (var v:int = 0; v < values.length; v++) {
+                var card:Contract = children[v];
+                if (Card.NULL != card.value) {
+                    trace("Game.viewContract:  Why is place " + v + " not null?  It is " + card.value.toString());
+                }
+                card.value = values[v];
             }
-            tens.swapImage(tensValue);
-            var onesValue:int = this.deck.shift();
-            var ones:Contract = children[1];
-            if (Card.NULL != ones.value) {
-                trace("Game.revealContract:  Why is ones place not null?  It is " + ones.value.toString());
-            }
-            ones.swapImage(onesValue);
         }
 
         /* Set all cards in class to null. */
@@ -184,18 +196,104 @@ package com.finegamedesign.powerplant
                 for (var c:int = 0; c < children.length; c ++) {
                     var card:* = children[c] as CardClass;
                     if (Card.NULL != card.value) {
-                        card.swapImage(Card.NULL);
+                        card.value = Card.NULL;
                     }
                 }
-            }            
+            }
         }
         
         /* We keep our hand and score.  We discard the rest. 
          * Discard stacks and city contract.  */
         public function clear() {
-            this.clearChildren(Stack);
-            this.clearChildren(TheirStack);
+            rule.clear();
             this.clearChildren(Contract);
+            clearFields(this);
+        }
+
+        /**
+         * One stack with one card remains.
+         * The card is empty.
+         */
+        public static function clearFields(table:DisplayObjectContainer):void
+        {
+            var fields:Array = Container.getChildren(table, StackContainer);
+            for each (var field:StackContainer in fields) {
+                var stacks:Array = Container.getChildren(field, StackContainer);
+                var cards:Array = Container.getChildren(stacks[0], Card);
+                cards[0].value = Card.NULL;
+                for (var c:int=1; c < cards.length; c++) {
+                    cards[c].parent.removeChild(cards[c]);
+                }
+                for (var s:int=1; s < stacks.length; s++) {
+                    stacks[s].parent.removeChild(stacks[s]);
+                }
+            }
+        }
+
+        /**
+         * Rendering may occur before ActionScript on timeline.
+         * So use a label to call ActionScript.
+         * Flash Player 9 does not have currentFrameLabel, so expect label lasts 1 frame.
+         */
+        override public function nextFrame():void
+        {
+            super.nextFrame();
+            if (null != this.currentLabel 
+                    && 0 == this.currentLabel.indexOf("call_")) {
+                this[this.currentLabel.substr(5)]();
+            }
+        }
+
+        public function dealExample():void
+        {
+            this.reset();
+            this.deal(this.rule.yourHand, InHand);
+            this.deal(this.rule.theirHand, InTheirHand);
+            this.deal(this.rule.yourHand, InHand);
+            this.deal(this.rule.theirHand, InTheirHand);
+            this.deal(this.rule.yourHand, InHand);
+            this.deal(this.rule.theirHand, InTheirHand);
+            this.deal(this.rule.yourHand, InHand);
+        }
+
+        public function drawTheirExample():void
+        {
+            this.deal(this.rule.theirHand, InTheirHand);
+        }
+
+        public function playCardExample():void
+        {
+            this.update = this["powering"];
+            var theirField:StackContainer = Container.getLowestClass(this, [TheirField]);
+            var value_and_stack:Array = Calculate.select_value_and_stack(rule.theirHand, 
+                StackContainer.values(theirField), rule.contract);
+            if (null == value_and_stack) {
+                throw new Error("TODO: I cannot play");
+            }
+            else {
+                this.playCard(TheirField, value_and_stack[0], value_and_stack[1]);
+            }
+        }
+
+        public function drawExample():void
+        {
+            this.deal(this.rule.yourHand, InHand);
+        }
+
+        public function pickingExample():void
+        {
+            this.update = this.picking;
+        }
+
+        public function holdingExample():void
+        {
+            this.update = this.holding;
+        }
+
+        public function nextContractExample():void
+        {
+            this.gotoAndStop("call_revealContract");
+            revealContract();
         }
     }
 }
