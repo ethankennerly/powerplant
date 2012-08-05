@@ -134,7 +134,8 @@ package com.finegamedesign.powerplant
          * Move card from their hand to stack in container of their stack container. 
          *      FieldStackContainer
          *          StackContainer
-         *              Stack (ed Card)
+         *              Card
+         * Belongs to them, so cannot select this card or empty card.
          */
         public function playCard(FieldStackContainerClass:Class, value:int, stackIndex:int=0):void
         {
@@ -148,17 +149,17 @@ package com.finegamedesign.powerplant
                 }
             }
             if (null == found) {
-                trace("Game.playCard:  Do they have this card? " + value.toString());
+                throw new Error("Game.playCard:  Do they have this card? " + value.toString());
                 return;
             }
-            var empty:Stack = StackContainer.findLowest(this, FieldStackContainerClass, 
+            var empty:Card = StackContainer.findLowest(this, FieldStackContainerClass, 
                 Card.NULL, stackIndex);
             if (null == empty) {
-                trace("Game.playCard:  At least one frame beforehand, FieldStackContainer must exist.");                
+                throw new Error("Game.playCard:  At least one frame beforehand, FieldStackContainer must exist.");                
                 return;
             }
             found.swap(empty);
-            var next:CardStack = new CardStack();
+            var next:Stack = new Stack();
             StackContainer.offset(empty, next);
             empty.parent.addChild(next);
         }

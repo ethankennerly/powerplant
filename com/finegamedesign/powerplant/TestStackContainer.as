@@ -49,11 +49,11 @@ package com.finegamedesign.powerplant
             assertEquals("Empty stack", null, 
                 StackContainer.findLowest(table, StackContainer, Card.NULL));
             var stack1:StackContainer = new StackContainer();
-            stack1.addChild(new Stack(2));
-            stack1.addChild(new Stack(3));
+            stack1.addChild(new Card(2));
+            stack1.addChild(new Card(3));
             field.addChild(stack1);
             var stack2:StackContainer = new StackContainer();
-            var cardNull:Stack = new Stack();
+            var cardNull:Card = new Card();
             stack2.addChild(cardNull);
             field.addChild(stack2);
             assertEquals("Empty card value", Card.NULL, cardNull.value); 

@@ -56,7 +56,7 @@ package com.finegamedesign.powerplant
         {
             var game:Game = new Game();
             var stack:StackContainer = new StackContainer();
-            stack.addChild(new Stack());
+            stack.addChild(new Card());
             var field:StackContainer = new StackContainer();
             field.addChild(stack);
             game.addChild(field);
@@ -67,9 +67,9 @@ package com.finegamedesign.powerplant
             assertEquals(1, stack.numChildren);
             game.playCard(StackContainer, 1);
             assertEqualsArrays([], game.rule.theirHand);
-            assertEquals(1, (stack.getChildAt(0) as Stack).value);
+            assertEquals(1, (stack.getChildAt(0) as Card).value);
             assertEquals(2, stack.numChildren);
-            assertEquals(Card.NULL, (stack.getChildAt(1) as Stack).value);
+            assertEquals(Card.NULL, (stack.getChildAt(1) as Card).value);
         }
 
         /** 2 cards in 1 stack.  No cards in a second stack.  1 field on table.

@@ -7,6 +7,10 @@ package com.finegamedesign.powerplant
     /* Query objects in display list by their class. */
     public class StackContainer extends Sprite
     {
+        /**
+         * Flash compiler complains that class from SWC was not found.
+         * So here is value copy and pasted from FLA StackOffset.
+         */
         public static function offset(stack:DisplayObject, next:DisplayObject):void
         {
             next.y = stack.y + 24;
@@ -37,13 +41,13 @@ package com.finegamedesign.powerplant
          * Compiler complains about default constant Card.NULL, so pass in "value".
          */
         public static function findLowest(container:DisplayObjectContainer, 
-                FieldStackContainerClass:Class, value:int, stackIndex:int=0):Stack 
+                FieldStackContainerClass:Class, value:int, stackIndex:int=0):Card 
         {
-            var found:Stack;
+            var found:Card;
             var field:* = Container.getLowestClass(container, [FieldStackContainerClass]);
             var stacks:Array = Container.getChildren(field, StackContainer);
-            var cards:Array = Container.getChildren(stacks[stackIndex], Stack);
-            for each (var card:Stack in cards) {
+            var cards:Array = Container.getChildren(stacks[stackIndex], Card);
+            for each (var card:Card in cards) {
                 if (value == card.value) {
                     found = card;
                     break;
