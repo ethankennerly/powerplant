@@ -51,9 +51,12 @@ package com.finegamedesign.powerplant
             assertEquals(1, Selected.cursor.value);
             assertEquals(true, Selected.cursor.mc is Card1);
             var cardStack:Stack = new CardStack();
+            var stack:StackContainer = new StackContainer();
+            stack.addChild(cardStack);
             assertEquals(Card.NULL, cardStack.value);
             assertEquals(null, cardStack.mc);
             assertTrue(cardStack.visible);
+            Spot.mayPick(cardStack, Spot.place);
             cardStack.dispatchEvent(mouseOver);
             cardStack.dispatchEvent(mouseClick);
             assertEquals(Card.NULL, Selected.cursor.value);
@@ -62,7 +65,6 @@ package com.finegamedesign.powerplant
             assertEquals(true, cardStack.mc is Card1);
             
             trace("testClickStack: Card stack no longer responds.");
-            cardStack.dispatchEvent(mouseOut);
             assertEquals(MouseEvent.MOUSE_OUT, cardStack.currentLabel);
             if (cardStack.mouseEnabled || cardStack.mouseChildren) {
                 cardStack.dispatchEvent(mouseOver);

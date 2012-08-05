@@ -159,7 +159,7 @@ package com.finegamedesign.powerplant
                 return;
             }
             found.swap(empty);
-            var next:Stack = new Stack();
+            var next:CardStack = new CardStack();
             StackContainer.offset(empty, next);
             empty.parent.addChild(next);
         }
@@ -286,8 +286,13 @@ package com.finegamedesign.powerplant
             this.update = this.picking;
         }
 
+        /**
+         * Highlight empty card on your first stack where you may play.
+         */ 
         public function holdingExample():void
         {
+            var available:Card = StackContainer.findLowest(this, YourField, Card.NULL, 0);
+            Spot.mayPick(available, Spot.place);
             this.update = this.holding;
         }
 

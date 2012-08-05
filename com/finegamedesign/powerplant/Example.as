@@ -89,7 +89,7 @@ package com.finegamedesign.powerplant
             hand.y = 4;
             root.addChild(hand);
             var mouseClick:MouseEvent = new MouseEvent(MouseEvent.CLICK);
-            hand.select(mouseClick);
+            hand.dispatchEvent(mouseClick);
             if (! (0 == hand.value)) {
                 trace("Example.InHand_select: after hand.select(mouseClick); expect (0 == hand.value)");
             }
