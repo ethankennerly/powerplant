@@ -8,9 +8,9 @@ package com.finegamedesign.powerplant
      */
     public class Stack extends Card
     {
-        public function Stack(cardValue:int = Card.NULL) {
+        /*public function Stack(cardValue:int = Card.NULL) {
             super(cardValue);
-        }
+        }*/
 
         /* Map values.
          * For example @see TestStack.as

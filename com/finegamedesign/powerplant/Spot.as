@@ -22,8 +22,30 @@ package com.finegamedesign.powerplant
             card.addEventListener(MouseEvent.MOUSE_OVER, gotoMouseEvent);
             card.addEventListener(MouseEvent.MOUSE_OUT, gotoMouseEvent);
             card.addEventListener(MouseEvent.CLICK, onClick);
+            card.mouseEnabled = true;
+            card.mouseChildren = true;
             card.buttonMode = true; 
             card.stop();
+        }
+
+        public static function place(event:MouseEvent):void {
+            var card:Card = event.currentTarget as Card;
+            card.removeEventListener(MouseEvent.CLICK, place);
+            card.removeEventListener(MouseEvent.MOUSE_OVER, gotoMouseEvent);
+            card.removeEventListener(MouseEvent.MOUSE_OUT, gotoMouseEvent);
+            card.gotoAndPlay(MouseEvent.MOUSE_OUT);
+            card.buttonMode = false; 
+            card.mouseEnabled = false; 
+            card.mouseChildren = false; 
+            if (Selected.cursor is Selected) {
+                card.swap(Selected.cursor);
+            }
+            else {
+                card.swapImage(Card.NULL);
+            }
+            var next:CardStack = new CardStack();
+            StackContainer.offset(card, next);
+            card.parent.addChild(next);
         }
 
         public static function gotoMouseEvent(event:MouseEvent):void {
@@ -39,21 +61,6 @@ package com.finegamedesign.powerplant
                 trace("Spot.select:  Is there no cursor?");
                 event.currentTarget.swapImage(Card.NULL);
             }
-        }
-
-        public static function place(event:MouseEvent):void {
-            event.currentTarget.removeEventListener(MouseEvent.CLICK, place);
-            event.currentTarget.gotoAndPlay(MouseEvent.MOUSE_OUT);
-            event.currentTarget.buttonMode = false; 
-            if (Selected.cursor is Selected) {
-                event.currentTarget.swap(Selected.cursor);
-            }
-            else {
-                event.currentTarget.swapImage(Card.NULL);
-            }
-            var next:CardStack = new CardStack();
-            StackContainer.offset(event.currentTarget as DisplayObject, next);
-            event.currentTarget.parent.addChild(next);
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.finegamedesign.powerplant 
 {
     import flash.display.MovieClip;
+    import flash.events.Event; 
     import flash.events.MouseEvent; 
 
     /**
@@ -43,15 +44,15 @@ package com.finegamedesign.powerplant
             if (null != image) {
                 holder.removeChild(image);
             }
-	    if (Card.NULL == cardValue) {
-		holder.visible = false;
-		this.gotoAndPlay(MouseEvent.MOUSE_OUT);
-	    }
-	    else {
-		var imageClass:Class = Card.imageClasses[cardValue];
-		holder.addChild(new imageClass());
-		holder.visible = true;
-	    }
+            if (Card.NULL == cardValue) {
+                holder.visible = false;
+                this.gotoAndPlay(MouseEvent.MOUSE_OUT);
+            }
+            else {
+                var imageClass:Class = Card.imageClasses[cardValue];
+                holder.addChild(new imageClass());
+                holder.visible = true;
+            }
         }
 
         /* Image of card value or null. */
@@ -63,16 +64,13 @@ package com.finegamedesign.powerplant
         
         /* Hide.  Add to stage.  Swap image.  Then show. */
         public function Card(cardValue:int = Card.NULL) {
-            this.visible = false;
             super();
             if (null == Container.getLowestClass(this, [Holder])) {
                 this.addChild(new Holder());
             }
             this.value = cardValue;
-            this.visible = true;
-            this.cacheAsBitmap = true;
         }
-      
+     
         public function swapImage(cardValue:int):void {
             trace("Card.swapImage: deprecate for set value.");
             this.value = cardValue;
