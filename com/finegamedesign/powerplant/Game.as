@@ -4,6 +4,7 @@ package com.finegamedesign.powerplant
     import flash.display.DisplayObjectContainer;
     import flash.display.MovieClip;
     import flash.events.Event;
+    import flash.text.TextField;
 
     /**
      * Controller
@@ -171,6 +172,15 @@ package com.finegamedesign.powerplant
             viewContract(rule.revealContract());
         }
 
+        internal static function replaceDigits(text:String, replacements:Array):String
+        {
+            text = text.replace(/\d+/g, "<###>");
+            for (var r:int = 0; r < replacements.length; r++) {
+                text = text.replace("<###>", replacements[r]);
+            }
+            return text;
+        }
+
         public function viewContract(values:Array):void {
             if (2 != values.length) {
                 throw new Error("Game.viewContract:  Why are there not two values?  There are " + values.length.toString());
@@ -186,6 +196,9 @@ package com.finegamedesign.powerplant
                 }
                 card.value = values[v];
             }
+            var revealText:TextField = TextField(getChildByName("revealText"));
+            revealText.text = replaceDigits(revealText.text, [values[0], values[1], 
+                values[0] * 10 + values[1]]);
         }
 
         /* Set all cards in class to null. */

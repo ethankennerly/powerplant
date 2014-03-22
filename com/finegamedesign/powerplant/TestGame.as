@@ -94,5 +94,11 @@ package com.finegamedesign.powerplant
             assertEquals(1, stack0.numChildren);
             assertEquals(card0, stack0.getChildAt(0));
         }
+
+        public function testReplaceDigits():void
+        {
+            var text:String = "Card 3 and 1 means 31.";
+            assertEquals("Card 1 and 2 means 12.", Game.replaceDigits(text, [1, 2, 12]));
+        }
     }
 }
