@@ -52,8 +52,9 @@ package com.finegamedesign.powerplant
             var selected:Selected = Container.getLowestClass(this, [Selected]);
             if (null != selected && Card.NULL == selected.value && Card.NULL != Spot.placedValue) {
                 trace("Game.holding:  Card on stack.  You make power.  You may not select a card.");
-                rule.playCard(true, Spot.placedValue, 0);
+                rule.playCard(true, Spot.placedValue, Spot.placedStack);
                 Spot.placedValue = Card.NULL;
+                Spot.placedStack = Card.NULL;
                 youMayAddStack();
                 nextFrame();
                 //this.update = this["powering"];
@@ -335,6 +336,11 @@ package com.finegamedesign.powerplant
         }
 
         public function theyScore():void
+        {
+            rule.score();
+        }
+
+        public function youScore():void
         {
             rule.score();
         }

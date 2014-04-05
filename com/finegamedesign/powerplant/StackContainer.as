@@ -87,6 +87,8 @@ package com.finegamedesign.powerplant
                 }
                 nextStack.x = previous.x + previous.width + 10;
                 var field:* = Container.getLowestClass(container, [FieldStackContainerClass]);
+                var stacks:Array = Container.getChildren(field, StackContainer);
+                nextStack.name = "stack_" + stacks.length.toString();
                 field.addChild(nextStack);
             }
             return nextStack;

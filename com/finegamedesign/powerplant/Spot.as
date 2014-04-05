@@ -15,6 +15,7 @@ package com.finegamedesign.powerplant
          * Refer to what was placed.
          */
         public static var placedValue:int = Card.NULL;
+        public static var placedStack:int = Card.NULL;
 
         public function Spot(cardValue:int = Card.NULL) 
         {
@@ -44,6 +45,7 @@ package com.finegamedesign.powerplant
             card.mouseChildren = false; 
             if (Selected.cursor is Selected) {
                 placedValue = Selected.cursor.value;
+                placedStack = parseInt(card.parent.name.split("_")[1]);
                 card.swap(Selected.cursor);
             }
             else {
