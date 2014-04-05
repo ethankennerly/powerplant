@@ -36,6 +36,18 @@ package com.finegamedesign.powerplant
             return stackValues;
         }
 
+        public static function previousStack(container:DisplayObjectContainer, 
+                FieldStackContainerClass:Class):StackContainer
+        {
+            var found:StackContainer;
+            var field:* = Container.getLowestClass(container, [FieldStackContainerClass]);
+            var stacks:Array = Container.getChildren(field, StackContainer);
+            if (null != stacks && 1 <= stacks.length) {
+                found = stacks[stacks.length - 1];
+            }
+            return found;
+        }
+
         /**
          * The card in stack container whose value equals the given value. 
          * Compiler complains about default constant Card.NULL, so pass in "value".

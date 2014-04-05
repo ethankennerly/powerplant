@@ -72,6 +72,34 @@ package com.finegamedesign.powerplant
             assertEquals(Card.NULL, (stack.getChildAt(1) as Card).value);
         }
 
+        /** 
+         * Play on a second stack.
+         * Expect 1 in stack container, placeholder for next card, and hand is empty.
+         */
+        public function testPlayCardStack1():void
+        {
+            var game:Game = new Game();
+            var stack:StackContainer = new YourStackContainer();
+            stack.addChild(new Card());
+            var field:StackContainer = new StackContainer();
+            field.addChild(stack);
+            game.addChild(field);
+            game.rule.theirHand = [1, 2];
+            var inTheirHand:InTheirHand = new InTheirHand();
+            inTheirHand.value = 1;
+            game.addChild(inTheirHand);
+            inTheirHand = new InTheirHand();
+            inTheirHand.value = 2;
+            game.addChild(inTheirHand);
+            assertEquals(2, stack.numChildren);
+            game.playCard(StackContainer, 1, 0);
+            game.playCard(StackContainer, 2, 1);
+            assertEqualsArrays([], game.rule.theirHand);
+            assertEquals(1, (stack.getChildAt(0) as Card).value);
+            assertEquals(3, stack.numChildren);
+            assertEquals(Card.NULL, (stack.getChildAt(1) as Card).value);
+        }
+
         /** 2 cards in 1 stack.  No cards in a second stack.  1 field on table.
          * clear fields.  1 card in first stack.  No second stack.
          */

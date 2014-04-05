@@ -1,5 +1,6 @@
 package com.finegamedesign.powerplant
 {
+    import flash.utils.ByteArray;
     /**
      * @author Ethan Kennerly
      */
@@ -36,14 +37,12 @@ package com.finegamedesign.powerplant
         {
             var value_and_stack:Array;
             var max:int = 0;
+            var original_stacks:Array = clone(stacks);
+            original_stacks.push([]);
             for (var h:int=0; h < hand.length; h++) {
-                var original_stacks:Array = stacks.concat();
-                if (original_stacks.length == 0) {
-                    original_stacks.push([]);
-                }
                 for (var s:int=0; s < original_stacks.length; s++) {
-                    var hypothetical_stacks:Array = original_stacks.concat();
-                    hypothetical_stacks[s] = hypothetical_stacks[s].concat(hand[h]);
+                    var hypothetical_stacks:Array = clone(original_stacks);
+                    hypothetical_stacks[s].push(hand[h]);
                     var power:int = power(hypothetical_stacks);
                     if (max < power && power <= contract) {
                         max = power;
@@ -52,6 +51,14 @@ package com.finegamedesign.powerplant
                 }
             }
             return value_and_stack;
+        }
+ 
+        public static function clone(source:Object):*
+        {
+            var myBA:ByteArray = new ByteArray();
+            myBA.writeObject(source);
+            myBA.position = 0;
+            return(myBA.readObject());
         }
     }
 }

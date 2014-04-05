@@ -32,12 +32,16 @@ package com.finegamedesign.powerplant
             assertEquals(null, Calculate.select_value_and_stack([], [], 25));
             assertEquals(null, Calculate.select_value_and_stack([], [[], []], 25));
             assertEquals(null, Calculate.select_value_and_stack([], [[6]], 25));
-            assertEquals(null, Calculate.select_value_and_stack([7], [[6]], 25));
+            assertEqualsArrays([7, 1], Calculate.select_value_and_stack([7], [[6]], 25));
             assertEqualsArrays([3, 0], Calculate.select_value_and_stack([2, 5, 3], [[4]], 12));
             assertEqualsArrays([4, 0], Calculate.select_value_and_stack([2, 5, 4, 7], [[6]], 25));
             assertEqualsArrays([7, 0], Calculate.select_value_and_stack([4, 5, 5, 7], [], 25));
             assertEqualsArrays([4, 1], Calculate.select_value_and_stack([4, 5, 5, 7], [[2], [5, 1]], 25));
             assertEqualsArrays([4, 2], Calculate.select_value_and_stack([4, 5, 5, 7], [[2], [], [5, 1]], 25));
+            // Start new stack
+            assertEqualsArrays([2, 0], Calculate.select_value_and_stack([2, 4, 5, 8], [[9]], 25));
+            assertEqualsArrays([8, 1], Calculate.select_value_and_stack([4, 5, 8], [[9]], 25));
+            assertEqualsArrays([5, 1], Calculate.select_value_and_stack([4, 5, 8], [[9]], 15));
         }
     }
 }
