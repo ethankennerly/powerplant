@@ -67,5 +67,30 @@ package com.finegamedesign.powerplant
             }
             return found;
         }
+
+        internal static function add(container:DisplayObjectContainer, FieldStackContainerClass:Class):StackContainer
+        {
+            var nextStack:StackContainer;
+            var previous:StackContainer = StackContainer.previousStack(container, FieldStackContainerClass);
+            if (null == previous) {
+                throw new Error("Game.playCard:  At least one frame beforehand, FieldStackContainer must exist.");                
+            }
+            else {
+                if (previous is TheirStackContainer) {
+                    nextStack = new TheirStackContainer();
+                }
+                else if (previous is YourStackContainer) {
+                    nextStack = new YourStackContainer();
+                }
+                else {
+                    throw new Error("Expected previous was your or their stack container. Got " + previous);
+                }
+                nextStack.x = previous.x + previous.width + 10;
+                var field:* = Container.getLowestClass(container, [FieldStackContainerClass]);
+                field.addChild(nextStack);
+            }
+            return nextStack;
+        }
+
     }
 }

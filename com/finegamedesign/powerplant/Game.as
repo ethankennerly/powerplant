@@ -54,12 +54,21 @@ package com.finegamedesign.powerplant
                 trace("Game.holding:  Card on stack.  You make power.  You may not select a card.");
                 rule.playCard(true, Spot.placedValue, 0);
                 Spot.placedValue = Card.NULL;
+                youMayAddStack();
                 nextFrame();
                 //this.update = this["powering"];
                 //this.gotoAndStop("call_poweringExample");
             }
         }
         
+        private function youMayAddStack():void
+        {
+            if (1 <= rule.yourField[rule.yourField.length - 1].length) {
+                rule.yourField.push([]);
+                var nextStack:StackContainer = StackContainer.add(this, YourField);
+            }
+        }
+
         /* Update text of their power and your power. 
          * Update power for two cards on their stack.  */
         public function powering(event:Event = null) {
@@ -161,27 +170,8 @@ package com.finegamedesign.powerplant
             var empty:Card = StackContainer.findLowest(this, FieldStackContainerClass, 
                 Card.NULL, stackIndex);
             if (null == empty) {
-                var previous:StackContainer = StackContainer.previousStack(this, FieldStackContainerClass);
-                if (null == previous) {
-                    throw new Error("Game.playCard:  At least one frame beforehand, FieldStackContainer must exist.");                
-                    return;
-                }
-                else {
-                    var nextStack:StackContainer;
-                    if (previous is TheirStackContainer) {
-                        nextStack = new TheirStackContainer();
-                    }
-                    else if (previous is YourStackContainer) {
-                        nextStack = new YourStackContainer();
-                    }
-                    else {
-                        throw new Error("Expected previous was your or their stack container. Got " + previous);
-                    }
-                    nextStack.x = previous.x + previous.width + 10;
-                    empty = nextStack.getChildAt(0) as Card;
-                    var field:* = Container.getLowestClass(this, [FieldStackContainerClass]);
-                    field.addChild(nextStack);
-                }
+                var nextStack:StackContainer = StackContainer.add(this, FieldStackContainerClass);
+                empty = nextStack.getChildAt(0) as Card;
             }
             found.swap(empty);
             var next:CardStack = new CardStack();
@@ -369,11 +359,14 @@ package com.finegamedesign.powerplant
 
         /**
          * Highlight empty card on your first stack where you may play.
+         * Allow clicking on second stack.
          */ 
         public function holdingExample():void
         {
-            var available:Card = StackContainer.findLowest(this, YourField, Card.NULL, 0);
-            Spot.mayPick(available, Spot.place);
+            for (var stackIndex:int = 0; stackIndex < Math.max(1, rule.yourField.length); stackIndex++) {
+                var available:Card = StackContainer.findLowest(this, YourField, Card.NULL, stackIndex);
+                Spot.mayPick(available, Spot.place);
+            }
             this.update = this.holding;
         }
 
