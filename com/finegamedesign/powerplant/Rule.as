@@ -7,11 +7,16 @@ package com.finegamedesign.powerplant
     public class Rule
     {
         public var deck:Array;
+        public var contract:int;
+        /**
+         * These could be refactored to class per player.
+         */
         public var yourHand:Array;
         public var theirHand:Array;
         public var yourField:Array;
         public var theirField:Array;
-        public var contract:int;
+        public var yourScore:int;
+        public var theirScore:int;
 
         public function Rule()
         {
@@ -27,6 +32,8 @@ package com.finegamedesign.powerplant
             theirHand = new Array();
             yourField = new Array();
             theirField = new Array();
+            yourScore = 0;
+            theirScore = 0;
         }
         
         /* Deal one card to your hand. */
@@ -53,6 +60,58 @@ package com.finegamedesign.powerplant
             this.contract = 0;
             this.yourField = [];
             this.theirField = [];
+        }
+
+        public function playCard(you:Boolean, value:int, stackIndex:int):void
+        {
+            var field:Array = you ? yourField : theirField;
+            var hand:Array = you ? yourHand : theirHand;
+            hand.splice(hand.indexOf(value), 1);
+            if (field.length <= stackIndex) {
+                field.push([]);
+            }
+            field[stackIndex].push(value);
+        }
+
+        public function equalsContract(you:Boolean):Boolean
+        {
+            var field:Array = you ? yourField : theirField;
+            return contract == Calculate.power(field);
+        }
+
+        public function tallestStackInField(field:Array):int
+        {
+            var max:int = 0;
+            for (var f:int = 0; f < field.length; f++) {
+                if (max < field[f].length) {
+                    max = field[f].length;
+                }
+            }
+            return max;
+        }
+
+        public function tallestStack():int
+        {
+            return Math.max(tallestStackInField(yourField),
+                tallestStackInField(theirField));
+        }
+
+        /**
+         * Add to score for anyone by length of anyone's longest stack.
+         * @return  If anyone scored.
+         */
+        public function score():Boolean
+        {
+            var scored:Boolean = false;
+            if (equalsContract(true)) {
+                yourScore += tallestStack();
+                scored = true;
+            }
+            else if (equalsContract(false)) {
+                theirScore += tallestStack();
+                scored = true;
+            }
+            return scored;
         }
     }
 }

@@ -11,6 +11,11 @@ package com.finegamedesign.powerplant
      */
     public class Spot extends Card 
     {
+        /**
+         * Refer to what was placed.
+         */
+        public static var placedValue:int = Card.NULL;
+
         public function Spot(cardValue:int = Card.NULL) 
         {
             super(cardValue);
@@ -38,6 +43,7 @@ package com.finegamedesign.powerplant
             card.mouseEnabled = false; 
             card.mouseChildren = false; 
             if (Selected.cursor is Selected) {
+                placedValue = Selected.cursor.value;
                 card.swap(Selected.cursor);
             }
             else {

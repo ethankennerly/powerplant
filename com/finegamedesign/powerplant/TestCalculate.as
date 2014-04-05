@@ -11,10 +11,11 @@ package com.finegamedesign.powerplant
          * No stack.  Empty stack.
          * Stack of 2.  2 stacks.
          */
-        public function testProducePower():void
+        public function testPower():void
         {
             assertEquals(0, Calculate.power([]));
             assertEquals(0, Calculate.power([[]]));
+            assertEquals(0, Calculate.power([[3, 0]]));
             assertEquals(6, Calculate.power([[6]]));
             assertEquals(12, Calculate.power([[4, 3]]));
             assertEquals(24, Calculate.power([[6, 4]]));

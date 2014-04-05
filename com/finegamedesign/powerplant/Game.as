@@ -13,6 +13,8 @@ package com.finegamedesign.powerplant
     public class Game extends MovieClip
     {
         public var rule:Rule;
+        public var theirScore:MovieClip;
+        public var yourScore:MovieClip;
         public var update:Function;
 
         public function Game() 
@@ -31,6 +33,7 @@ package com.finegamedesign.powerplant
             if (null != this.update) {
                 this.update(event);
             }
+            updateScore();
         }
         
         /* pick a card.  card selected:  holding. */
@@ -49,6 +52,7 @@ package com.finegamedesign.powerplant
             var selected:Selected = Container.getLowestClass(this, [Selected]);
             if (null != selected && Card.NULL == selected.value) {
                 trace("Game.holding:  Card on stack.  You make power.  You may not select a card.");
+                rule.playCard(true, Spot.placedValue, 0);
                 nextFrame();
                 //this.update = this["powering"];
                 //this.gotoAndStop("call_poweringExample");
@@ -140,7 +144,7 @@ package com.finegamedesign.powerplant
          */
         public function playCard(FieldStackContainerClass:Class, value:int, stackIndex:int=0):void
         {
-            rule.theirHand.splice(rule.theirHand.indexOf(value), 1);
+            rule.playCard(false, value, stackIndex);
             var found:InTheirHand = null;
             var theirHand:Array = Container.getChildren(this, InTheirHand);
             for (var c:int = 0; c < theirHand.length; c ++) {
@@ -287,6 +291,35 @@ package com.finegamedesign.powerplant
             else {
                 this.playCard(TheirField, value_and_stack[0], value_and_stack[1]);
             }
+        }
+
+        public function theyMayWinContract():void
+        {
+            if (rule.equalsContract(false)) {
+                gotoAndStop("call_theyWinContract");
+                theyWinContract();
+            }
+            else {
+                gotoAndStop("call_drawExample");
+                drawExample();
+            }
+        }
+
+        public function theyWinContract():void
+        {
+        }
+
+        public function theyScore():void
+        {
+            rule.score();
+        }
+
+        private function updateScore():void
+        {
+            this.theirScore.gotoAndStop(rule.theirScore + 1);
+            this.theirScore.txt.text = rule.theirScore.toString();
+            this.yourScore.gotoAndStop(rule.yourScore + 1);
+            this.yourScore.txt.text = rule.yourScore.toString();
         }
 
         public function drawExample():void

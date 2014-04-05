@@ -6,6 +6,7 @@ package com.finegamedesign.powerplant
   {
     public function Tests()
     {
+        addTest(new TestRule());
         addTest(new TestStack());
         addTest(new TestStackContainer());
         addTest(new TestCalculate());
