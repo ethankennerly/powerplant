@@ -85,9 +85,9 @@ package com.finegamedesign.powerplant
         /* Update text of their power and your power. 
          * Update power for two cards on their stack.  */
         public function powering(event:Event = null) {
-            Game.describePowering(this, YourField, PowerText, 
+            Game.describePowering(this, rule.yourField, PowerText, 
                 PowerDescription, "YOU", "YOUR");
-            Game.describePowering(this, TheirField, PowerTheirText, 
+            Game.describePowering(this, rule.theirField, PowerTheirText, 
                 TheirPowerDescription, "I", "MY");
         }
 
@@ -95,14 +95,12 @@ package com.finegamedesign.powerplant
          * Text of total power, description of card played on one stack.
          */ 
         public static function describePowering(table:DisplayObjectContainer, 
-            FieldStackContainerClass:Class, PowerTextClass:Class, DescriptionClass:Class, 
+            stackValues:Array, PowerTextClass:Class, DescriptionClass:Class, 
             pronoun:String, possessive:String):void
         {
-            var field:* = Container.getLowestClass(table, [FieldStackContainerClass]);
-            var stackValues:Array = StackContainer.values(field);
             var powerText:* = Container.getLowestClass(table, [PowerTextClass]);
             if (null != powerText) {
-                powerText._txt.text = Calculate.power([stackValues]).toString();
+                powerText._txt.text = Calculate.power(stackValues).toString();
             }
             var description:* = Container.getLowestClass(table, [DescriptionClass]);
             if (null != description && null != description.txt) {
@@ -197,6 +195,10 @@ package com.finegamedesign.powerplant
          * DOES NOT yet check if deck has one or fewer cards.  */
         public function revealContract():void {
             viewContract(rule.revealContract());
+            var contractText:* = Container.getLowestClass(this, [ContractText]);
+            if (null != contractText) {
+                contractText._txt.text = rule.contract.toString();
+            }
         }
 
         internal static function replaceDigits(text:String, replacements:Array):String
@@ -344,7 +346,6 @@ package com.finegamedesign.powerplant
 
         public function youWinContract():void
         {
-            rule.score();
         }
 
         public function theyScore():void
@@ -359,6 +360,7 @@ package com.finegamedesign.powerplant
 
         private function updateScore():void
         {
+            powering();
             this.theirScore.gotoAndStop(rule.theirScore + 1);
             this.theirScore.txt.text = rule.theirScore.toString();
             this.yourScore.gotoAndStop(rule.yourScore + 1);
