@@ -43,5 +43,21 @@ package com.finegamedesign.powerplant
             assertEqualsArrays([8, 1], Calculate.select_value_and_stack([4, 5, 8], [[9]], 25));
             assertEqualsArrays([5, 1], Calculate.select_value_and_stack([4, 5, 8], [[9]], 15));
         }
+
+        /**
+         * Examples where power would be under contract to play a card.
+         */
+        public function testStacksUnderContract():void
+        {
+            assertEqualsArrays([false], Calculate.stacksUnderContract(9, [], 2));
+            assertEqualsArrays([true], Calculate.stacksUnderContract(1, [], 25));
+            assertEqualsArrays([true, true], Calculate.stacksUnderContract(3, [[4]], 12));
+            assertEqualsArrays([true, true], Calculate.stacksUnderContract(2, [[6]], 25));
+            assertEqualsArrays([false, true], Calculate.stacksUnderContract(7, [[6]], 25));
+            assertEqualsArrays([true, false, true], Calculate.stacksUnderContract(6, [[2], [5, 1]], 25));
+            assertEqualsArrays([false], Calculate.stacksUnderContract(9, [[]], 2));
+            assertEqualsArrays([true], Calculate.stacksUnderContract(1, [[]], 25));
+            assertEqualsArrays([true, true], Calculate.stacksUnderContract(3, [[4], []], 12));
+        }
     }
 }

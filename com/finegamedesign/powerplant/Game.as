@@ -39,7 +39,7 @@ package com.finegamedesign.powerplant
         /* pick a card.  card selected:  holding. */
         public function picking(event:Event = null) {
             var selected:Selected = Container.getLowestClass(this, [Selected]);
-            if (null != selected && Card.NULL != selected.value) {
+            if (this.update == picking && null != selected && Card.NULL != selected.value) {
                 trace("Game.picking:  You see a card by your cursor.");
                 nextFrame();
                 //this.update = this["holding"];
@@ -47,6 +47,15 @@ package com.finegamedesign.powerplant
             }
         }
         
+        private function showStacksUnderContract(value:int):void
+        {
+            var stacksValid:Array = Calculate.stacksUnderContract(value, rule.yourField, rule.contract);
+            for (var stackIndex:int = 0; stackIndex < stacksValid.length; stackIndex++) {
+                var empty:Card = StackContainer.findLowest(this, YourField, Card.NULL, stackIndex);
+                empty.visible = stacksValid[stackIndex];
+            }
+        }
+
         /* cursor is empty and card played to stack:  powering. */
         public function holding(event:Event = null) {
             var selected:Selected = Container.getLowestClass(this, [Selected]);
@@ -59,6 +68,9 @@ package com.finegamedesign.powerplant
                 nextFrame();
                 //this.update = this["powering"];
                 //this.gotoAndStop("call_poweringExample");
+            }
+            else if (null != selected) {
+                showStacksUnderContract(selected.value);
             }
         }
         

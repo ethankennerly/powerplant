@@ -27,7 +27,7 @@ package com.finegamedesign.powerplant
         public function reset():void 
         {
             trace("Rule.reset:  Now your cards will be dealt in the tutorial's starting order.");
-            this.deck = new Array(1, 3, 2, 4, 3, 4, 4, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2);
+            this.deck = [1, 3, 2, 4, 3, 4, 4, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2];
             yourHand = new Array();
             theirHand = new Array();
             yourField = new Array();
