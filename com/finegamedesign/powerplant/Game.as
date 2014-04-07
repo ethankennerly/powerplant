@@ -12,6 +12,7 @@ package com.finegamedesign.powerplant
      */
     public class Game extends MovieClip
     {
+        public var deck:MovieClip;
         public var rule:Rule;
         public var theirScore:MovieClip;
         public var yourScore:MovieClip;
@@ -300,6 +301,7 @@ package com.finegamedesign.powerplant
             this.deal(this.rule.yourHand, InHand);
             this.deal(this.rule.theirHand, InTheirHand);
             this.deal(this.rule.yourHand, InHand);
+            this.deal(this.rule.theirHand, InTheirHand);
         }
 
         public function drawTheirExample():void
@@ -368,6 +370,7 @@ package com.finegamedesign.powerplant
             this.theirScore.txt.text = rule.theirScore.toString();
             this.yourScore.gotoAndStop(rule.yourScore + 1);
             this.yourScore.txt.text = rule.yourScore.toString();
+            this.deck.txt.text = rule.deck.length.toString();
         }
 
         public function drawExample():void

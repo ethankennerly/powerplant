@@ -31,7 +31,20 @@ package com.finegamedesign.powerplant
         {
             trace("Rule.reset:  Now your cards will be dealt in the tutorial's starting order.");
             if (null == deck) {
-                deck = [1, 3, 2, 4, 3, 4, 4, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2];
+                deck = [1, 3, 
+                        2, 4, 
+                        3, 4, 
+                        4, 1, 
+                        1, 2, 
+                        4, 3, 
+                        9, 
+                        2, 5, 
+                        6, 8, 
+                        4, 3, 
+                        7, 3, 
+                        5, 7,
+                        5, 3,
+                        1, 1];
             }
             else if (deck.length <= 0) {
                 deck = shuffle(generateDeck());
