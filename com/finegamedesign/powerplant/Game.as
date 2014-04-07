@@ -4,6 +4,7 @@ package com.finegamedesign.powerplant
     import flash.display.DisplayObjectContainer;
     import flash.display.MovieClip;
     import flash.events.Event;
+    import flash.events.MouseEvent;
     import flash.text.TextField;
 
     /**
@@ -28,6 +29,17 @@ package com.finegamedesign.powerplant
             trace("Game.start:  You see the cover of Power Plant.");
             this.removeEventListener(Event.ADDED_TO_STAGE, this.start);
             this.stage.addEventListener(Event.ENTER_FRAME, this.enterFrame);
+            deck.discard.addEventListener(MouseEvent.CLICK, discardThis);
+        }
+
+        private function discardThis(event:Event = null):void
+        {
+            if (holding == update && Selected.cursor && Selected.cursor.value != Card.NULL) {
+                rule.discard(rule.yourHand, Selected.cursor.value);
+                Selected.discard();
+                update = null;
+                nextFrame();
+            }
         }
 
         public function enterFrame(event:Event = null) {
@@ -69,6 +81,9 @@ package com.finegamedesign.powerplant
                 nextFrame();
                 //this.update = this["powering"];
                 //this.gotoAndStop("call_poweringExample");
+            }
+            else if (update == holding && null != selected && Card.NULL == selected.value) {
+                this.update = null;
             }
             else if (null != selected) {
                 showStacksUnderContract(selected.value);
@@ -157,6 +172,10 @@ package com.finegamedesign.powerplant
             if (Card.NULL == dealt) {
                 throw new Error("Game.deal:  Why no card?  Hand full?  Deck empty?");
             }
+        }
+
+        public function endGame():void
+        {
         }
 
         /**
@@ -314,7 +333,8 @@ package com.finegamedesign.powerplant
             this.update = this["powering"];
             var value_and_stack:Array = Calculate.select_value_and_stack(rule.theirHand, rule.theirField, rule.contract);
             if (null == value_and_stack) {
-                throw new Error("TODO: I cannot play");
+                trace("I cannot play from " + rule.theirHand.toString());
+                rule.discard(rule.theirHand, rule.theirHand[int(rule.theirHand.length * Math.random())]);
             }
             else {
                 this.playCard(TheirField, value_and_stack[0], value_and_stack[1]);

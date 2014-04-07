@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="cache-control" content="no-cache, no-store">
+	<title>Power Plant</title>
+	<meta name="description" content="A card game by Ethan Kennerly."/>
+	
+	<script src="js/swfobject.js"></script>
+	<script>
+		var flashvars = {
+		};
+		var params = {
+			menu: "false",
+			scale: "showAll",
+			allowFullscreen: "true",
+			allowScriptAccess: "always",
+			bgcolor: "",
+			wmode: "direct" // can cause issues with FP settings & webcam
+		};
+		var attributes = {
+			id:"powerplant"
+		};
+		swfobject.embedSWF(
+			"powerplant.swf", 
+			"altContent", "640", "480", "10.0.0", 
+			"expressInstall.swf", 
+			flashvars, params, attributes);
+	</script>
+	<style>
+		html, body {}
+		body { margin:0; background:333333}
+	</style>
+</head>
+<center>
+<body bgcolor=333333>
+<br>
+<br>
+	<div id="altContent">
+		<h1>powerplant</h1>
+		<p><a href="http://www.adobe.com/go/getflashplayer">Get Adobe Flash player</a></p>
+	</div>
+
+<pre>
+<font color=white>
+POWER PLANT
+
+Race to light up the city!
+
+The city needs electricity.
+Take turns playing cards to build power plants.
+Each card in your stack multiplies your power.
+Each stack in your field adds power.
+Don't go over budget and watch out for accidents!
+
+A card game by Ethan Kennerly.
+
+Designed for Jade Brewer.
+</font>
+</pre>
+</center>
+</body>
+</html>

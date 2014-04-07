@@ -56,5 +56,10 @@ package com.finegamedesign.powerplant
                 trace("Selected.snapToMouse:  root is null? (" + this.x + ", " + this.y + ")"); // spam
             }
         }
+
+        public static function discard(mouseEvent:MouseEvent=null):void
+        {
+            cursor.value = Card.NULL;
+        }
     }
 }

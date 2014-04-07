@@ -113,11 +113,16 @@ package com.finegamedesign.powerplant
             this.theirField = [];
         }
 
+        public function discard(hand:Array, value:int):void
+        {
+            hand.splice(hand.indexOf(value), 1);
+        }
+
         public function playCard(you:Boolean, value:int, stackIndex:int):void
         {
             var field:Array = you ? yourField : theirField;
             var hand:Array = you ? yourHand : theirHand;
-            hand.splice(hand.indexOf(value), 1);
+            discard(hand, value);
             if (field.length <= stackIndex) {
                 field.push([]);
             }
