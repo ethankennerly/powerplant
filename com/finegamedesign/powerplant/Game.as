@@ -395,5 +395,16 @@ package com.finegamedesign.powerplant
             this.gotoAndStop("call_revealContract");
             revealContract();
         }
+
+        public function nextContractExampleYou():void
+        {
+            revealContract();
+        }
+        
+        public function gotoDrawExample():void
+        {
+            gotoAndStop("call_drawExample");
+            drawExample();
+        }
     }
 }
