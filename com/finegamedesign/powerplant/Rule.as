@@ -23,11 +23,19 @@ package com.finegamedesign.powerplant
             reset();
         }
 
-        /* After hand appears. */
+        /**
+         * After hand appears. 
+         * Generate deck with tutorial at first, then full deck.
+         */
         public function reset():void 
         {
             trace("Rule.reset:  Now your cards will be dealt in the tutorial's starting order.");
-            this.deck = [1, 3, 2, 4, 3, 4, 4, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2];
+            if (null == deck) {
+                deck = [1, 3, 2, 4, 3, 4, 4, 1, 2, 4, 3, 9, 2, 5, 6, 8, 4, 3, 7, 3, 2];
+            }
+            else if (deck.length <= 0) {
+                deck = shuffle(generateDeck());
+            }
             yourHand = new Array();
             theirHand = new Array();
             yourField = new Array();
@@ -44,10 +52,39 @@ package com.finegamedesign.powerplant
             return dealt;
         }
 
+        public static function generateDeck():Array
+        {
+            var cards:Array = [];
+            var counts:Array = [ 0,  8,  8, 16, 12, 
+                                20,  8, 12,  8,  8];
+            for (var c:int = 0; c < counts.length; c++) {
+                for (var count:int = 0; count < counts[c]; count++)
+                {
+                    cards.push(c);
+                }
+            }
+            return cards;
+        }
+
+        /**
+         * @param    cards  In-place.
+         */
+        public static function shuffle(cards:Array):Array
+        {
+            for (var i:int = cards.length - 1; 1 <= i; i--) {
+                var other:int = Math.random() * (i + 1);
+                var temp:int = cards[i];
+                cards[i] = cards[other];
+                cards[other] = temp;
+            }
+            return cards;
+        }
+
         /* At least one frame beforehand, Contract must exist.  
          * Move card from deck to contract.  
          * DOES NOT yet check if deck has one or fewer cards.  */
-        public function revealContract():Array {
+        public function revealContract():Array 
+        {
             var tensValue:int = this.deck.shift();
             var onesValue:int = this.deck.shift();
             contract = 10 * tensValue + onesValue;
@@ -56,7 +93,8 @@ package com.finegamedesign.powerplant
 
         /* We keep our hand and score.  We discard the rest. 
          * Discard stacks and city contract.  */
-        public function clear() {
+        public function clear() 
+        {
             this.contract = 0;
             this.yourField = [];
             this.theirField = [];

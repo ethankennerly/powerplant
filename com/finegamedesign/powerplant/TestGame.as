@@ -44,8 +44,8 @@ package com.finegamedesign.powerplant
             assertEqualsArrays([], Container.getChildren(game, Description));
             var description:Description = new Description();
             game.addChild(description);
-            Game.describePowering(game, StackContainer, PowerText, Description, "YOU", "YOUR");
-            assertEquals("YOU HAVE NO CARDS IN PLAY.\r\rYOU MAKE 0 POWER.", description.txt.text);
+            Game.describePowering(game, [[]], PowerText, Description, "YOU", "YOUR");
+            assertEquals("YOU HAVE NO CARDS IN PLAY.\rYOU MAKE 0 POWER.", description.txt.text);
         }
 
         /** 

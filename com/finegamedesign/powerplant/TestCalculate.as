@@ -24,6 +24,23 @@ package com.finegamedesign.powerplant
         }
 
         /**
+         * No stack.  Empty stack.
+         * Stack of 2.  2 stacks.
+         */
+        public function testDescribe():void
+        {
+            assertEquals("", Calculate.describe([]));
+            assertEquals("", Calculate.describe([[]]));
+            assertEquals("", Calculate.describe([[6]]));
+            assertEquals("4 x 3 = 12", Calculate.describe([[4, 3]]));
+            assertEquals("6 x 4 = 24", Calculate.describe([[6, 4]]));
+            assertEquals("7 x 6 = 42", Calculate.describe([[7, 6]]));
+            assertEquals("3 x 0 = 0", Calculate.describe([[3, 0]]));
+            assertEquals("2 + (5 x 1 x 4) = 22", Calculate.describe([[2], [5, 1, 4]]));
+            assertEquals("3 x 0 = 0", Calculate.describe([[3, 0], []]));
+        }
+
+        /**
          * Match one stack.  Nearest to contract on one stack.  Exceed one stack.  No hand.
          * No stack.  Nearest to contract on second stack.
          */

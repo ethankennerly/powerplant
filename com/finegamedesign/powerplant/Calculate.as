@@ -29,6 +29,45 @@ package com.finegamedesign.powerplant
         }
 
         /**
+         * Multiply cards in stack.  Add stack products.
+         * Example @see TestCalculate.as
+         */
+        public static function describe(stacks:Array):String
+        {
+            var description:String = "";
+            var termCount:int = 0;
+            var products:Array = [];
+            var trimmed:Array = clone(stacks);
+            removeEmpty(trimmed);
+            for (var s:int=0; s < trimmed.length; s++) {
+                var product:String = "";
+                termCount += trimmed[s].length;
+                if (2 <= trimmed.length && 2 <= trimmed[s].length) {
+                    product += "(";
+                }
+                product += trimmed[s].join(" x ")
+                if (2 <= trimmed.length && 2 <= trimmed[s].length) {
+                    product += ")";
+                }
+                products.push(product);
+            }
+            if (2 <= termCount) {
+                description += products.join(" + ") 
+                    + " = " + power(trimmed).toString();
+            }
+            return description;
+        }
+
+        private static function removeEmpty(stacks:Array):void
+        {
+            for (var s:int = stacks.length - 1; 0 <= s; s--) {
+                if (stacks[s].length <= 0) {
+                    stacks.splice(s, 1);
+                }
+            }
+        }
+
+        /**
          * Select a card from hand that plays on a stack to match contract,
          * or most nearly approaches contract without going over.
          * Example @see TestCalculate.as

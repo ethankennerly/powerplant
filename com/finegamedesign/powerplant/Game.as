@@ -141,6 +141,9 @@ package com.finegamedesign.powerplant
         /* Deal one card to your hand. */
         public function deal(hand:Array, HandClass:Class):void 
         {
+            if (rule.deck.length <= 0) {
+                gotoAndStop("call_endGame");
+            }
             var dealt:int = rule.deal(hand);
             var cards:Array = Container.getChildren(this, HandClass);
             for (var c:int = 0; c < cards.length; c++ ) {

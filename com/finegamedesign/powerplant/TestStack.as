@@ -88,22 +88,22 @@ package com.finegamedesign.powerplant
         public function testDescribePower():void
         {
             assertEquals(
-                "I HAVE NO CARDS IN PLAY.\n\nI MAKE 0 POWER.",
+                "I HAVE NO CARDS IN PLAY.\nI MAKE 0 POWER.",
                 Stack.describePower([]));
             assertEquals(
-                "I HAVE NO CARDS IN PLAY.\n\nI MAKE 0 POWER.",
+                "I HAVE NO CARDS IN PLAY.\nI MAKE 0 POWER.",
                 Stack.describePower([[]]));
             assertEquals(
-                "I PLAY 4.\n\nI MAKE 4 POWER.",
+                "I MAKE 4 POWER.",
                 Stack.describePower([[4]]));
             assertEquals(
-                "I PLAY 3 ON MY 4.\n4 x 3 = 12\nI MAKE 12 POWER.",
+                "4 x 3 = 12.\nI MAKE 12 POWER.",
                 Stack.describePower([[4, 3]]));
             assertEquals(
-                "I PLAY 2 ON MY 4 AND 3.\n4 x 3 x 2 = 24\nI MAKE 24 POWER.",
+                "4 x 3 x 2 = 24.\nI MAKE 24 POWER.",
                 Stack.describePower([[4, 3, 2]]));
             assertEquals(
-                "YOU PLAY 2 ON YOUR 4 AND 3.\n4 x 3 x 2 = 24\nYOU MAKE 24 POWER.",
+                "4 x 3 x 2 = 24.\nYOU MAKE 24 POWER.",
                 Stack.describePower([[4, 3, 2]], "YOU", "YOUR"));
         }
 

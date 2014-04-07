@@ -31,8 +31,8 @@ package com.finegamedesign.powerplant
         public static function describePower(stackPowers:Array, 
                 pronoun:String="I", possessive:String="MY", stackIndex:int=0):String
         {
-            var product:int = Calculate.power(stackPowers);
-            var description:String;
+            var total:int = Calculate.power(stackPowers);
+            var description:String = "";
             var arithmetic:String = "";
             var powers:Array;
             var cardCount:int = 0;
@@ -43,25 +43,15 @@ package com.finegamedesign.powerplant
                 }
             }
             if (0 == cardCount || null == powers || 0 == powers.length) {
-                description = pronoun + " HAVE NO CARDS IN PLAY";
+                description = pronoun + " HAVE NO CARDS IN PLAY.\n";
             }
             else {
-                description = pronoun + " PLAY " + powers[powers.length - 1].toString();
-                if (2 <= powers.length) {
-                    description += " ON " + possessive;
-                    arithmetic = powers[0].toString();
-                    for (var i:int=1; i < powers.length; i++) {
-                        description += " " + powers[i-1].toString();
-                        if (i < powers.length - 1) {
-                            description += " AND";
-                        }
-                        arithmetic += " x " + powers[i].toString();
-                    }
-                    arithmetic += " = " + product.toString();
-                }
+                arithmetic = Calculate.describe(stackPowers);
             }
-            description += ".\n" + arithmetic 
-                + "\n" + pronoun + " MAKE " + product.toString() + " POWER.";
+            if ("" != arithmetic) {
+                description += arithmetic + ".\n";
+            }
+            description += pronoun + " MAKE " + total.toString() + " POWER.";
             return description;
         }
     }
